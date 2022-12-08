@@ -135,12 +135,13 @@ begin
     process(clk) is
         type kernel_matrix is array (3 downto 0) of real;
         type real_array is array (natural range<>) of real;
+        type rgb_array is array (natural range<>) of rgb;
         variable neig_x, neig_y         : real;
         variable x_matrix               : real_array(3 downto 0);
         variable y_matrix               : real_array(3 downto 0);
         variable k_matrix_x, k_matrix_y : kernel_matrix;
         variable neighbour_matrix       : image_process (3 downto 0, 3 downto 0);
-        variable dot_product_buff       : rgb(3 downto 0);
+        variable dot_product_buff       : rgb_array(3 downto 0);
         variable result_neighbour       : rgb;
         variable temp                   : rgb;
        
@@ -199,17 +200,19 @@ begin
                             temp.green  := 0;
                             temp.blue   := 0;
                             for m in 0 to 3 loop
-                                temp.red    := temp.red + integer(round(k_matrix_y(k)*real(dot_product_buff(l,m).red)));    
-                                temp.green  := temp.green + integer(round(k_matrix_y(k)*real(dot_product_buff(l,m).green)));    
-                                temp.blue   := temp.blue + integer(round(k_matrix_y(k)*real(dot_product_buff(l,m).blue)));       
+                                temp.red    := temp.red + integer(round(k_matrix_y(k)*real(dot_product_buff(m).red)));    
+                                temp.green  := temp.green + integer(round(k_matrix_y(k)*real(dot_product_buff(m).green)));    
+                                temp.blue   := temp.blue + integer(round(k_matrix_y(k)*real(dot_product_buff(m).blue)));       
                             end loop;
-                        result_neighbour(k,l).red   := temp.red; 
-                        result_neighbour(k,l).green := temp.green; 
-                        result_neighbour(k,l).blue  := temp.blue; 
+                        result_neighbour.red   := temp.red; 
+                        result_neighbour.green := temp.green; 
+                        result_neighbour.blue  := temp.blue; 
                         end loop;
                     end loop; 
 
                     out_image_buff(i,j).red  <= result_neighbour.red;
+                    out_image_buff(i,j).green  <= result_neighbour.blue;
+                    out_image_buff(i,j).blue  <= result_neighbour.blue;
                     
 
                 end loop;
