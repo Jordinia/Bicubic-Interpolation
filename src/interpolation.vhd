@@ -2,14 +2,13 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 use IEEE.MATH_REAL.ALL;
-use IEEE.fixed_pkg.all;
 
 use work.package_imageArray.all;
 
 entity interpolation is
     generic(
-        x               : natural := 50; 
-        y               : natural := 50;
+        x               : natural := 100; 
+        y               : natural := 100;
         upscale_ratio   : natural := 2
     );
     port (
@@ -56,14 +55,14 @@ architecture rtl of interpolation is
         end loop;
 
         --outimg[2:H+2, 2:W+2] = img
-        for i in 0 to x-1 loop
-            for j in 0 to y-1 loop
+        for i in 0 to x loop
+            for j in 0 to y loop
                 in_image_padded(i+2, j+2) := in_image_buff(i, j);
             end loop;
         end loop;
 
         --zimg[2:H+2, 0:2, :C] = img[:, 0:1, :C]
-        for i in 0 to x-1 loop
+        for i in 0 to x loop
             in_image_padded(i+2, 0) := in_image_buff(i, 0);
             in_image_padded(i+2, 1) := in_image_buff(i, 0);
             in_image_padded(i+2, 2) := in_image_buff(i, 1);
@@ -72,24 +71,24 @@ architecture rtl of interpolation is
         --outimg(H+2 to H+4, W+2 to W+4, 1 to C) := img(H to H-1, W to W-1, 1 to C);
         for i in 0 to 1 loop
             for j in 0 to 1 loop
-                in_image_padded(x-1+i+2, y-1+i+2) := in_image_buff(x-1,y-1);
+                in_image_padded(x+i+2, y+i+2) := in_image_buff(x,y);
             end loop;
         end loop;
         
-        in_image_padded(x-1+2, y-1+4) := in_image_buff(x-1,y-1);
-        in_image_padded(x-1+3, y-1+4) := in_image_buff(x-1,y-1);
-        in_image_padded(x-1+4, y-1+4) := in_image_buff(x-1,y-1);
+        in_image_padded(x+2, y+4) := in_image_buff(x-1,y-1);
+        in_image_padded(x+3, y+4) := in_image_buff(x-1,y-1);
+        in_image_padded(x+4, y+4) := in_image_buff(x-1,y-1);
         
 
         --outimg(2 to H+2, 2 to W+2, 1 to C) := img(1 to H, 1 to W, 1 to C);
-        for i in 0 to x-1 loop
-            for j in 0 to y-1 loop
+        for i in 0 to x loop
+            for j in 0 to y loop
                 in_image_padded(i+2, j+2) := in_image_buff(i, j);
             end loop;
         end loop;
         
         -- zimg[0:2, 2:W+2, :C] = img[0:1, :, :C]
-        for j in 0 to y-1 loop
+        for j in 0 to y loop
             in_image_padded(0, j+2) := in_image_buff(0, j);
             in_image_padded(1, j+2) := in_image_buff(0, j);
             in_image_padded(2, j+2) := in_image_buff(1, j);
@@ -105,19 +104,19 @@ architecture rtl of interpolation is
         -- zimg[H+2:H+4, 0:2, :C] = img[H-1, 0, :C]
         for i in 0 to 2 loop
             for j in 0 to 2 loop
-                in_image_padded(x-1+i, j) := in_image_buff(x-1, 0);
+                in_image_padded(x+i, j) := in_image_buff(x-1, 0);
             end loop;
         end loop;
         -- zimg[H+2:H+4, W+2:W+4, :C] = img[H-1, W-1, :C]
         for i in 0 to 2 loop
             for j in 0 to 2 loop
-                in_image_padded(x-1+i+2, y-1+j+2) := in_image_buff(x-1, y-1);
+                in_image_padded(x+i+2, y+j+2) := in_image_buff(x-1, y-1);
             end loop;
         end loop;
         -- zimg[0:2, W+2:W+4, :C] = img[0, W-1, :C]
         for i in 0 to 2 loop
             for j in 0 to 2 loop
-                in_image_padded(i, y-1+j+2) := in_image_buff(0, y-1);
+                in_image_padded(i, y+j+2) := in_image_buff(0, y-1);
             end loop;
         end loop;
 
@@ -134,12 +133,12 @@ begin
     in_image_buff <= in_image;
 
     process(clk) is
-        type kernel_matrix is array (3 downto 0) of sfixed(7 downto -7);
-        type sfixed_array is array (natural range<>) of sfixed(7 downto -7);
+        type kernel_matrix is array (3 downto 0) of real;
+        type real_array is array (natural range<>) of real;
         type rgb_array is array (natural range<>) of rgb;
-        variable neig_x, neig_y         : sfixed(7 downto -7);
-        variable x_matrix               : sfixed_array(3 downto 0);
-        variable y_matrix               : sfixed_array(3 downto 0);
+        variable neig_x, neig_y         : real;
+        variable x_matrix               : real_array(3 downto 0);
+        variable y_matrix               : real_array(3 downto 0);
         variable k_matrix_x, k_matrix_y : kernel_matrix;
         variable neighbour_matrix       : image_process (3 downto 0, 3 downto 0);
         variable dot_product_buff       : rgb_array(3 downto 0);
@@ -147,33 +146,33 @@ begin
         variable temp                   : rgb;
        
     begin
-        in_image_padded <= padding(in_image_buff);
-        
-
         if (rising_edge(clk)) then
+
+            in_image_padded <= padding(in_image_buff);
+
             for i in 0 to x*upscale_ratio-1 loop
                 for j in 0 to y*upscale_ratio-1 loop
-                    neig_x := to_sfixed(real(i)*(1.0/real(upscale_ratio)) + 2.0, neig_x);
-                    neig_y := to_sfixed(real(j)*(1.0/real(upscale_ratio)) + 2.0, neig_y);
+                    neig_x := real(i)*(1.0/real(upscale_ratio)) + 2.0;
+                    neig_y := real(j)*(1.0/real(upscale_ratio)) + 2.0;
 
-                    x_matrix(0) := to_sfixed(1.0 + to_real(neig_x) - round(to_real(neig_x)) , x_matrix(0));
-                    x_matrix(1) := to_sfixed(to_real(neig_x) - round(to_real(neig_x))       , x_matrix(1));
-                    x_matrix(2) := to_sfixed(round(to_real(neig_x)) + 1.0 - to_real(neig_x) , x_matrix(2));
-                    x_matrix(3) := to_sfixed(round(to_real(neig_x)) + 1.0 - to_real(neig_x) , x_matrix(3));
+                    x_matrix(0) := 1.0 + neig_x - round(neig_x);
+                    x_matrix(1) := neig_x - round(neig_x);
+                    x_matrix(2) := round(neig_x) + 1.0 - neig_x;
+                    x_matrix(3) := round(neig_x) + 1.0 - neig_x;
 
-                    y_matrix(0) := to_sfixed(1.0 + to_real(neig_y) - round(to_real(neig_y)) , y_matrix(0));
-                    y_matrix(1) := to_sfixed(to_real(neig_y) - round(to_real(neig_y))       , y_matrix(1));
-                    y_matrix(2) := to_sfixed(round(to_real(neig_y)) + 1.0 -to_real(neig_y)  , y_matrix(2));
-                    y_matrix(3) := to_sfixed(round(to_real(neig_y)) + 1.0 - to_real(neig_y) , y_matrix(3));
+                    y_matrix(0) := 1.0 + neig_y - round(neig_y);
+                    y_matrix(1) := neig_y - round(neig_y);
+                    y_matrix(2) := round(neig_y) + 1.0 - neig_y;
+                    y_matrix(3) := round(neig_y) + 1.0 - neig_y;
 
                     for k in 0 to 3 loop
-                        k_matrix_x(k) := to_sfixed(kernel(to_real(x_matrix(k))), k_matrix_x(k));
-                        k_matrix_y(k) := to_sfixed(kernel(to_real(y_matrix(k))), k_matrix_y(k));
+                        k_matrix_x(k) := kernel(x_matrix(k));
+                        k_matrix_y(k) := kernel(y_matrix(k));
                     end loop;
                         
                     for k in 0 to 3 loop
                         for l in 0 to 3 loop
-                            neighbour_matrix(k,l) := in_image_padded(integer(round(to_real(neig_x) - to_real(x_matrix(k)))), integer(round(to_real(neig_y) - to_real(y_matrix(l)))));
+                            neighbour_matrix(k,l) := in_image_buff(integer(round(neig_x - x_matrix(k))), integer(round(neig_y - y_matrix(l))));
                         end loop;
                     end loop;
                     
@@ -184,9 +183,9 @@ begin
                         temp.blue   := 0;
                         for l in 0 to 3 loop
                             for m in 0 to 3 loop
-                                temp.red := temp.red + integer(round(to_real(k_matrix_x(k))*real(neighbour_matrix(l,m).red)));    
-                                temp.green := temp.green + integer(round(to_real(k_matrix_x(k))*real(neighbour_matrix(l,m).green)));    
-                                temp.blue := temp.blue + integer(round(to_real(k_matrix_x(k))*real(neighbour_matrix(l,m).blue)));       
+                                temp.red := temp.red + integer(round(k_matrix_x(k)*real(neighbour_matrix(l,m).red)));    
+                                temp.green := temp.green + integer(round(k_matrix_x(k)*real(neighbour_matrix(l,m).green)));    
+                                temp.blue := temp.blue + integer(round(k_matrix_x(k)*real(neighbour_matrix(l,m).blue)));       
                             end loop;
                         end loop;
                         dot_product_buff(k).red   := temp.red; 
@@ -201,9 +200,9 @@ begin
                             temp.green  := 0;
                             temp.blue   := 0;
                             for m in 0 to 3 loop
-                                temp.red    := temp.red + integer(round(to_real(k_matrix_y(k))*real(dot_product_buff(m).red)));    
-                                temp.green  := temp.green + integer(round(to_real(k_matrix_y(k))*real(dot_product_buff(m).green)));    
-                                temp.blue   := temp.blue + integer(round(to_real(k_matrix_y(k))*real(dot_product_buff(m).blue)));       
+                                temp.red    := temp.red + integer(round(k_matrix_y(k)*real(dot_product_buff(m).red)));    
+                                temp.green  := temp.green + integer(round(k_matrix_y(k)*real(dot_product_buff(m).green)));    
+                                temp.blue   := temp.blue + integer(round(k_matrix_y(k)*real(dot_product_buff(m).blue)));       
                             end loop;
                         result_neighbour.red   := temp.red; 
                         result_neighbour.green := temp.green; 
@@ -220,5 +219,7 @@ begin
             end loop;
        end if;
     end process;
-    out_image <=  out_image_buff;
+    
+    
+    
 end architecture rtl;
