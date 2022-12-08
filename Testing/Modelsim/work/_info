@@ -1,0 +1,82 @@
+m255
+K4
+z2
+!s11e MIXED_VERSIONS
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+dC:/Users/Rizky Awanta Jordhie/Documents/All-Files/TUGAS/UI/2-Pembelajaran/3-Kuliah/Materi x Buku/Semester 3/Perancangan Sistem Digital/Praktikum/Modul 9 Finite State Machine/FSM
+Ppackage_imagearray
+Z0 DPx4 ieee 9 math_real 0 22 gNk<PdFJ<XNPcfef`f?Z81
+Z1 DPx4 ieee 11 numeric_std 0 22 aU^R8eGcicLcUFIaBQSL>3
+Z2 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z3 DPx4 ieee 14 std_logic_1164 0 22 cVAk:aDinOX8^VGI1ekP<3
+!i122 13
+w1670490465
+Z4 dC:/Users/Rizky Awanta Jordhie/Documents/All-Files/TUGAS/UI/2-Pembelajaran/3-Kuliah/Materi x Buku/Semester 3/Perancangan Sistem Digital/Praktikum/Modul 10 Proyek/Testing/Modelsim
+8C:/Users/Rizky Awanta Jordhie/Documents/All-Files/TUGAS/UI/2-Pembelajaran/3-Kuliah/Materi x Buku/Semester 3/Perancangan Sistem Digital/Praktikum/Modul 10 Proyek/Testing/Modelsim/package_imageArray.vhd
+FC:/Users/Rizky Awanta Jordhie/Documents/All-Files/TUGAS/UI/2-Pembelajaran/3-Kuliah/Materi x Buku/Semester 3/Perancangan Sistem Digital/Praktikum/Modul 10 Proyek/Testing/Modelsim/package_imageArray.vhd
+l0
+L8 1
+Vz2AzNH3K_2_FoWTN<dokS1
+!s100 6VmYOizo3>z?DjcdNm3GH1
+Z5 OV;C;2020.1;71
+32
+!s110 1670490470
+!i10b 1
+!s108 1670490470.000000
+!s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Rizky Awanta Jordhie/Documents/All-Files/TUGAS/UI/2-Pembelajaran/3-Kuliah/Materi x Buku/Semester 3/Perancangan Sistem Digital/Praktikum/Modul 10 Proyek/Testing/Modelsim/package_imageArray.vhd|
+!s107 C:/Users/Rizky Awanta Jordhie/Documents/All-Files/TUGAS/UI/2-Pembelajaran/3-Kuliah/Materi x Buku/Semester 3/Perancangan Sistem Digital/Praktikum/Modul 10 Proyek/Testing/Modelsim/package_imageArray.vhd|
+!i113 1
+Z6 o-work work -2002 -explicit
+Z7 tExplicit 1 CvgOpt 0
+Eupscaler
+Z8 w1670490545
+Z9 DPx4 work 18 package_imagearray 0 22 z2AzNH3K_2_FoWTN<dokS1
+R0
+R1
+R2
+R3
+!i122 15
+R4
+Z10 8C:\Users\Rizky Awanta Jordhie\Documents\All-Files\TUGAS\UI\2-Pembelajaran\3-Kuliah\Materi x Buku\Semester 3\Perancangan Sistem Digital\Praktikum\Modul 10 Proyek\Testing\Modelsim\upscaler.vhd
+Z11 FC:\Users\Rizky Awanta Jordhie\Documents\All-Files\TUGAS\UI\2-Pembelajaran\3-Kuliah\Materi x Buku\Semester 3\Perancangan Sistem Digital\Praktikum\Modul 10 Proyek\Testing\Modelsim\upscaler.vhd
+l0
+L8 1
+VgLc3Y2RBL;M7b2bnKc>gn2
+!s100 b>FHBD4UXF><h]iobZDnR3
+R5
+32
+Z12 !s110 1670490568
+!i10b 1
+Z13 !s108 1670490568.000000
+Z14 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:\Users\Rizky Awanta Jordhie\Documents\All-Files\TUGAS\UI\2-Pembelajaran\3-Kuliah\Materi x Buku\Semester 3\Perancangan Sistem Digital\Praktikum\Modul 10 Proyek\Testing\Modelsim\upscaler.vhd|
+!s107 C:\Users\Rizky Awanta Jordhie\Documents\All-Files\TUGAS\UI\2-Pembelajaran\3-Kuliah\Materi x Buku\Semester 3\Perancangan Sistem Digital\Praktikum\Modul 10 Proyek\Testing\Modelsim\upscaler.vhd|
+!i113 1
+R6
+R7
+Artl
+R9
+R0
+R1
+R2
+R3
+DEx4 work 8 upscaler 0 22 gLc3Y2RBL;M7b2bnKc>gn2
+!i122 15
+l42
+L34 40
+V2mTZG754P_0FBkQGOFW0:0
+!s100 2YBHP7<PVGa:I`DzT3VkC1
+R5
+32
+R12
+!i10b 1
+R13
+R14
+Z15 !s107 C:\Users\Rizky Awanta Jordhie\Documents\All-Files\TUGAS\UI\2-Pembelajaran\3-Kuliah\Materi x Buku\Semester 3\Perancangan Sistem Digital\Praktikum\Modul 10 Proyek\Testing\Modelsim\upscaler.vhd|
+!i113 1
+R6
+R7
