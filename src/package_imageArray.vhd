@@ -67,9 +67,9 @@ package body package_imageArray is
     begin
         for i in 0 to x loop
             for j in 0 to y loop
-                inputImageArray(i,j).RED <= 0;
-                inputImageArray(i,j).GREEN <= 0;
-                inputImageArray(i,j).BLUE <= 0;
+                inputImageArray(i,j).RED := 0;
+                inputImageArray(i,j).GREEN := 0;
+                inputImageArray(i,j).BLUE := 0;
             end loop;
         end loop;
     end procedure initialImageArray;
