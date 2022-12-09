@@ -1,3 +1,5 @@
+-- UPSCALER V2 w.o interpolation
+--VERSION 01.30 10/12
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -7,12 +9,12 @@ use work.package_imageArray.all;
 
 entity upscaler is
   generic (
-      x_size : natural := 20;
-      y_size : natural := 20
+      x_size : natural := 1000;
+      y_size : natural := 1000
   );
   port(
 		clk    : in std_logic;
-		reset  : in std_logic;
+		reset  : inout std_logic;
     load   : in std_logic; -- Input to load the next BMP
     done   : in std_logic; -- Done signal
 
@@ -38,7 +40,8 @@ architecture rtl of upscaler is
 
   -- signal for the current state of the FSM
   signal cur_state : fsm_states;
-
+  signal x_size2 : natural := x_size;
+  signal y_size2 : natural := x_size;
   signal tempImageArray: image_process(0 to x_size-1, 0 to y_size-1);
 begin
   -- always block for the FSM
@@ -46,30 +49,46 @@ begin
   begin
     if (reset = '1') then
       -- reset the FSM to the IDLE state
+      for i in 0 to x_size-1 loop
+        for j in 0 to y_size-1 loop
+            tempImageArray(i, j).RED <= 0;
+            tempImageArray(i, j).GREEN <= 0;
+            tempImageArray(i, j).BLUE <= 0;
+        end loop;
+      end loop;
+      outputImageArray <= tempImageArray;
+      ready <= '1';
+      upscaled <= '0';
+      state <= "00";
       cur_state <= IDLE;
-      initialImageArray(x_size, y_size, inputImageArray);
-      ready <= 1;
-      upscaled <= 0;
+      reset <= '0';
     elsif (rising_edge(clk)) then
       -- update the FSM state based on the current state and the inputs
       case cur_state is
         when IDLE =>
-          -- initialize the shared variables
-          initialImageArray(x_size, y_size, outputImageArray);
           state <= "00";
+          for i in 0 to x_size-1 loop
+            for j in 0 to y_size-1 loop
+                tempImageArray(i, j).RED <= 0;
+                tempImageArray(i, j).GREEN <= 0;
+                tempImageArray(i, j).BLUE <= 0;
+            end loop;
+          end loop;
+          outputImageArray <= tempImageArray;
           if (load = '1') then
             tempImageArray <= inputImageArray;
+            state <= "01";
             cur_state <= ACTIVE;
           end if;
         when ACTIVE =>
-          state <= "01";
-          outputImageArray <= tempImageArray;
-          cur_state <= IDLE;
-        when FINISHED =>
           state <= "10";
+          outputImageArray <= tempImageArray;
+          cur_state <= FINISHED;
+        when FINISHED =>
+          ready <= '0';
           upscaled <= '1';
           if (done = '1') then
-            cur_state <= IDLE;
+            reset <= '1';
           end if;
       end case;
     end if;
