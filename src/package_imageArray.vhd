@@ -1,3 +1,4 @@
+--VERSION 14.19 12/09
 -- Bicubic interpolation memory package
 library ieee;
 use ieee.std_logic_1164.all;
@@ -7,60 +8,69 @@ use ieee.math_real.all;
 
 package package_imageArray is
     -- Type for storing RGB value of each pixel:
-	TYPE RGB IS RECORD
-        RED     : INTEGER;
-        GREEN   : INTEGER;
-        BLUE    : INTEGER;
+	subTYPE COLOR IS INTEGER range 0 to 255;
+    TYPE RGB IS RECORD
+        RED     : COLOR;
+        GREEN   : COLOR;
+        BLUE    : COLOR;
     END RECORD;
 
     -- Type for storing image pixel containing RGB:
-    TYPE image IS ARRAY (99 DOWNTO 0, 99 DOWNTO 0) OF RGB;
+    type image_process is array (natural range<>, natural range<>) of RGB;
 
-    shared VARIABLE inputImageArray : image;
-    shared VARIABLE outputImageArray : image;
+    -- shared VARIABLE inputImageArray : image;
+    -- shared VARIABLE outputImageArray : image;
+    
+    -- function initialImageArray(
+    --     signal x, y : natural;
+    --     signal clk  : std_logic;
+    --     signal inputImageArray : image_process
+    -- ) return image_process;
 
-    procedure initialInputImageArray;
-    procedure initialOutputImageArray;
+    procedure initialImageArray(
+        signal x, y : in natural;
+        variable inputImageArray : inout image_process
+    );
 
 end package package_imageArray;
 
 package body package_imageArray is
-    procedure initialInputImageArray is
-    begin
-        for i in 0 to 99 loop
-            for j in 0 to 99 loop
-                inputImageArray(i,j).variable1 := 0;
-                inputImageArray(i,j).variable2 := 0;
-                inputImageArray(i,j).variable3 := 0;
-            end loop;
-        end loop;
-    end procedure;
-    procedure initialOutputImageArray is
-    begin
-        for i in 0 to 99 loop
-            for j in 0 to 99 loop
-                outputImageArray(i,j).variable1 := 0;
-                outputImageArray(i,j).variable2 := 0;
-                outputImageArray(i,j).variable3 := 0;
-            end loop;
-        end loop;
-    end procedure;
-end package body;
--- := (
---     ((0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0) ),
---     ((0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0) ),
---     ((0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0) ),
---     ((0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0) )
---     )
 
--- function initialImageArray(input : image) return image is
+    -- function initialImageArray(
+    --     signal x, y : natural;
+    --     signal clk  : std_logic;
+    --     signal inputImageArray : image_process
+    -- ) return image_process is
+    --     signal i : natural := 0;
+    --     signal j : natural := 0;
     -- begin
-    --     for i in 0 to 99 loop
-    --         for j in 0 to 99 loop
-    --             image_array(i,j).variable1 := 0;
-    --             image_array(i,j).variable2 := 0;
-    --             image_array(i,j).variable3 := 0;
-    --         end loop;
-    --     end loop;
-    -- end function;
-    
+    --     if rising_edge(clk) then
+    --         i <= i + 1;
+    --         if i = x then
+    --             i <= 0;
+    --             j <= j + 1;
+    --             if j = y then
+    --                 j <= 0;
+    --             end if;
+    --         end if;
+    --         inputImageArray(i,j).RED <= 0;
+    --         inputImageArray(i,j).GREEN <= 0;
+    --         inputImageArray(i,j).BLUE <= 0;
+    --       end if;
+    -- end function initialImageArray;
+
+
+    procedure initialImageArray(
+        signal x, y : in natural;
+        variable inputImageArray : inout image_process
+    )  is
+    begin
+        for i in 0 to x loop
+            for j in 0 to y loop
+                inputImageArray(i,j).RED <= 0;
+                inputImageArray(i,j).GREEN <= 0;
+                inputImageArray(i,j).BLUE <= 0;
+            end loop;
+        end loop;
+    end procedure initialImageArray;
+end package body package_imageArray;
