@@ -1,5 +1,5 @@
 --padding
---version: 11.41 10/12
+--version: 11.41 13/09
 library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
@@ -8,8 +8,8 @@ use work.package_imageArray.all;
 
 entity padding is
     generic(
-        x               : natural := 1000; 
-        y               : natural := 1000;
+        x               : natural := 4; 
+        y               : natural := 4;
         upscale_ratio   : natural := 2
     );
     port (

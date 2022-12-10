@@ -1,24 +1,24 @@
 --bicubic interpolation
---version: 11.41 10/12
+--version: 11.41 13/09
 library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 use IEEE.MATH_REAL.ALL;
 
 --comment code below if you run in Quartus prime lite/standard version.
-use IEEE.fixed_pkg.all;
+---use IEEE.fixed_pkg.all;
 
 --uncomment code below if you run in Quartus prime lite/standard version.
--- library ieee_proposed;
--- use ieee_proposed.fixed_float_types.all;
--- use ieee_proposed.fixed_pkg.all;
+library ieee_proposed;
+use ieee_proposed.fixed_float_types.all;
+use ieee_proposed.fixed_pkg.all;
 
 use work.package_imageArray.all;
 
 entity interpolation is
     generic(
-        x               : natural := 1000; 
-        y               : natural := 1000;
+        x               : natural := 4; 
+        y               : natural := 4;
         upscale_ratio   : natural := 2
     );
     port (

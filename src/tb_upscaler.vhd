@@ -27,10 +27,10 @@ architecture testbench of tb_upscaler is
   type image_pointer is access image_type;
 
   -- DUT signals
-  signal x_size : natural := 20;
-  signal y_size : natural := 20;
+  signal x_size : natural := 1000;
+  signal y_size : natural := 1000;
   signal clk    : std_logic;
-  constant clk_period : time := 250 ps;
+  constant clk_period : time := 100 ps;
   signal reset  : std_logic;
   signal load   : std_logic; -- Input to load the next BMP
   signal done   : std_logic;  -- Done signal
