@@ -1,5 +1,5 @@
--- UPSCALER V3 w interpolation
---VERSION 12.21 10/12
+-- UPSCALER V2 w.o interpolation
+--VERSION 11.30 10/12
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -16,7 +16,7 @@ entity upscaler is
   );
   port(
 		clk    : in std_logic;
-		reset  : inout std_logic;
+		reset  : in std_logic;
     load   : in std_logic; -- Input to load the next BMP
     done   : in std_logic; -- Done signal
 
@@ -40,8 +40,8 @@ architecture rtl of upscaler is
 
   component interpolation is
     generic(
-        x               : natural := 1000; 
-        y               : natural := 1000;
+        x               : natural := 4; 
+        y               : natural := 4;
         upscale_ratio   : natural := 2
     );
     port (
@@ -58,11 +58,11 @@ architecture rtl of upscaler is
   signal cur_state      : fsm_states;
   signal upscale_ratio2 : natural := 2;
   signal x_size2        : natural := x_size;
-  signal y_size2        : natural := x_size;
+  signal y_size2        : natural := y_size;
   signal doneUpscale    : std_logic;
   signal start          : std_logic;
   signal tempImageArray : image_process(0 to x_size-1, 0 to y_size-1);
-  signal temp2ImageArray : image_process(0 to x_size*upscale_ratio-1, 0 to y_size*upscale_ratio-1);
+  --signal temp2ImageArray : image_process(0 to x_size*upscale_ratio-1, 0 to y_size*upscale_ratio-1);
   
 
 begin
@@ -75,7 +75,7 @@ begin
                         ) 
                         port map(
                           in_image    => tempImageArray,
-                          out_image   => temp2ImageArray,
+                          out_image   => outputImageArray,
                           clk  => clk,
                           start => start,
                           doneUpscale => doneUpscale
@@ -85,25 +85,15 @@ begin
   upscaler: process(clk, reset)
   begin
     if (reset = '1') then
-      -- reset the FSM to the IDLE state
-      for i in 0 to x_size-1 loop
-        for j in 0 to y_size-1 loop
-            tempImageArray(i, j).RED <= 0;
-            tempImageArray(i, j).GREEN <= 0;
-            tempImageArray(i, j).BLUE <= 0;
-        end loop;
-      end loop;
-      -- outputImageArray <= tempImageArray;
-      ready <= '1';
-      upscaled <= '0';
-      start <= '0';
       state <= "00";
       cur_state <= IDLE;
-      reset <= '0';
     elsif (rising_edge(clk)) then
       -- update the FSM state based on the current state and the inputs
       case cur_state is
         when IDLE =>
+          ready <= '1';
+          upscaled <= '0';
+          start <= '0';
           state <= "00";
           for i in 0 to x_size-1 loop
             for j in 0 to y_size-1 loop
@@ -112,7 +102,7 @@ begin
               tempImageArray(i, j).BLUE <= 0;
             end loop;
           end loop;
-          outputImageArray <= temp2ImageArray;
+          --outputImageArray <= temp2ImageArray;
           if (load = '1') then
             tempImageArray <= inputImageArray;
             state <= "01";
@@ -120,17 +110,19 @@ begin
             cur_state <= ACTIVE;
           end if;
         when ACTIVE =>
-          state <= "10";
+          
           if (doneUpscale = '1') then
+	    state <= "10";
             start <= '0';
-            outputImageArray <= temp2ImageArray;
+            --outputImageArray <= temp2ImageArray;
             cur_state <= FINISHED;
           end if;
         when FINISHED =>
           ready <= '0';
           upscaled <= '1';
           if (done = '1') then
-            reset <= '1';
+            state <= "00";
+            cur_state <= IDLE;
           end if;
       end case;
     end if;

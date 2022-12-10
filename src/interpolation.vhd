@@ -109,6 +109,7 @@ begin
        
     begin 
         if start = '0' then
+            doneUpscale <= '0';
             state <= IDLE;
         elsif (rising_edge(clk)) then
             
