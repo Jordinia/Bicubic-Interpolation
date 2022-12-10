@@ -16,13 +16,13 @@ Our design works by reading a BMP image file and then storing the value of each 
 
 ## Finite State Machine
 
-# Upscaler
+### Upscaler
 ![alt text](https://github.com/Jordinia/Bicubic-Interpolation/blob/main/Assets/FSM%20Upscaler.jpg?raw=true)
 
-# Interpolation
+### Interpolation
 ![alt text](https://github.com/Jordinia/Bicubic-Interpolation/blob/main/Assets/FSM%20Interpolation.jpg?raw=true)
 
-# Padding
+### Padding
 ![alt text](https://github.com/Jordinia/Bicubic-Interpolation/blob/main/Assets/FSM%20Padding.jpg?raw=true)
 
 ## Testing
