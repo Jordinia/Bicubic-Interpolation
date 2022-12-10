@@ -30,6 +30,8 @@ Our design works by reading a BMP image file and then storing the value of each 
 We tested our design by using a testbench file that reads a predetermined BMP image file that will be passed to the input. The design will be declared unsuccessful if the output BMP image file wasn't upscaled.
 
 ## Result
+
+### Wave
 ![alt text](https://github.com/Jordinia/Bicubic-Interpolation/blob/main/Assets/ScreenshotWave1.jpg?raw=true)
 ![alt text](https://github.com/Jordinia/Bicubic-Interpolation/blob/main/Assets/ScreenshotWave2.jpg?raw=true)
 
@@ -38,4 +40,14 @@ It took 2350 ps to upscale a 25x25 image into a 50x50
 ![alt text](https://github.com/Jordinia/Bicubic-Interpolation/blob/main/Assets/ScreenshotWave3.jpg?raw=true)
 ![alt text](https://github.com/Jordinia/Bicubic-Interpolation/blob/main/Assets/ScreenshotWave4.jpg?raw=true)
 
-Full result is ![here](https://github.com/Jordinia/Bicubic-Interpolation/blob/main/Assets/UPSCALER.wlf)
+Full wave result is ![here](https://github.com/Jordinia/Bicubic-Interpolation/blob/main/Assets/UPSCALER.wlf)
+
+### Upscaled Image
+ 
+ - Failed Test 1, 22x22 into 44x44 cropped to 22x22
+ ![alt text](https://raw.githubusercontent.com/Jordinia/Bicubic-Interpolation/main/Assets/test1.bmp)
+ ![alt text](https://raw.githubusercontent.com/Jordinia/Bicubic-Interpolation/main/Assets/out1.bmp)
+ 
+ - Test 2, 22x22 into 44x44 
+ ![alt text](https://raw.githubusercontent.com/Jordinia/Bicubic-Interpolation/main/Assets/test2.bmp)
+ ![alt text](https://raw.githubusercontent.com/Jordinia/Bicubic-Interpolation/main/Assets/out2.bmp)
