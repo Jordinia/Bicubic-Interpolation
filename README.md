@@ -12,11 +12,11 @@ Our project aims to recreate the functionality of the Hardware Accelerator Image
 
 ## How to use
 
-
+Our design works by reading a BMP image file and then storing the value of each pixels into an array. The program then pass the array through the hardware and outputs the upscaled version of the inputted BMP image file.
 
 ## Testing
 
-
+We tested our design by using a testbench file that reads a predetermined BMP image file that will be passed to the input. The design will be declared unsuccessful if the output BMP image file wasn't upscaled.
 
 ## Result
 ![alt text](https://github.com/Jordinia/Bicubic-Interpolation/blob/main/ScreenshotWave1.jpg?raw=true)
