@@ -8,7 +8,7 @@ Our project aims to recreate the functionality of the Hardware Accelerator Image
 
 ## How it works
 
-
+When the user input the image, the image will first be turned into an array made out of the image's pixels rgb values. The hardware then will pass the array into the interpolation component. In the interpolation component, the rgb values of the image that is stored inside the array will then be upscaled through an algorithm called bicubic interpolation. The new rgb values will then be stored inside a new empty array that has been resized according to the scale of the upscaling. The new values inside of the array will then be outputted into an empty bmp file to show an upscaled version of the inputted image.
 
 ## How to use
 
@@ -22,7 +22,7 @@ We tested our design by using a testbench file that reads a predetermined BMP im
 ![alt text](https://github.com/Jordinia/Bicubic-Interpolation/blob/main/ScreenshotWave1.jpg?raw=true)
 ![alt text](https://github.com/Jordinia/Bicubic-Interpolation/blob/main/ScreenshotWave2.jpg?raw=true)
 
-2350 ps after 25x25
+2350 ps after 50x50
 
 ![alt text](https://github.com/Jordinia/Bicubic-Interpolation/blob/main/ScreenshotWave3.jpg?raw=true)
 ![alt text](https://github.com/Jordinia/Bicubic-Interpolation/blob/main/ScreenshotWave4.jpg?raw=true)
