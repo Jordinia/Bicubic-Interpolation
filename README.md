@@ -2,9 +2,9 @@
 
 ## Background
 
-Hardware Accelerator Image Upscaling is a hardware which can improve image quality by increasing the number of pixels (padding) in the image. Hardware Accelerator Image Upscaling is made to speed up the upscaling process without the need for a PC or laptop. This Hardware Accelerator is generally used in the process of improving the quality of CCTV or cameras with low resolution quality in order to get a higher quality.
+Image Upscaling Hardware Accelerator is a hardware device that improves the quality of an image by increasing the number of pixels in the image, also known as padding, while maintain or improving image quality. This hardware accelerator is designed to speed up image upscaling process without the need for a CPU, and uses a Bicubic Interpolation algorithm to further enhance the quality of the upscaled image. It can be used in image-intensive applications that require high-quality images, such as CCTV cameras or other low-resolution cameras.
 
-Our project aims to recreate the functionality of the Hardware Accelerator Image Upscaling hardware using VHDL, a hardware description language used to design and simulate digital systems.
+Our project aims to recreate the functionality of an image upscaler using VHDL, a hardware description language used to design and simulate digital systems. This will allow us to create a digital system that can perform image upscaling quickly and accurately, without the need for computing power from existing CPU.
 
 ## How it works
 
