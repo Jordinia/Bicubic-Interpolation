@@ -14,6 +14,10 @@ When the user input the image, the image will first be turned into an array made
 
 Our design works by reading a BMP image file and then storing the value of each pixels into an array. The program then pass the array through the hardware and outputs the upscaled version of the inputted BMP image file.
 
+## Finite State Machine
+
+
+
 ## Testing
 
 We tested our design by using a testbench file that reads a predetermined BMP image file that will be passed to the input. The design will be declared unsuccessful if the output BMP image file wasn't upscaled.
@@ -22,7 +26,9 @@ We tested our design by using a testbench file that reads a predetermined BMP im
 ![alt text](https://github.com/Jordinia/Bicubic-Interpolation/blob/main/Assets/ScreenshotWave1.jpg?raw=true)
 ![alt text](https://github.com/Jordinia/Bicubic-Interpolation/blob/main/Assets/ScreenshotWave2.jpg?raw=true)
 
-it took 2350 ps to upscale a 25x25 image into a 50x50
+It took 2350 ps to upscale a 25x25 image into a 50x50
 
 ![alt text](https://github.com/Jordinia/Bicubic-Interpolation/blob/main/Assets/ScreenshotWave3.jpg?raw=true)
 ![alt text](https://github.com/Jordinia/Bicubic-Interpolation/blob/main/Assets/ScreenshotWave4.jpg?raw=true)
+
+Full result is here ![alt text](https://github.com/Jordinia/Bicubic-Interpolation/blob/main/Assets/UPSCALER.wlf)
