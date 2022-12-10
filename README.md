@@ -16,7 +16,14 @@ Our design works by reading a BMP image file and then storing the value of each 
 
 ## Finite State Machine
 
+### Upscaler
+![alt text](https://github.com/Jordinia/Bicubic-Interpolation/blob/main/Assets/FSM%20Upscaler.jpg?raw=true)
 
+### Interpolation
+![alt text](https://github.com/Jordinia/Bicubic-Interpolation/blob/main/Assets/FSM%20Interpolation.jpg?raw=true)
+
+### Padding
+![alt text](https://github.com/Jordinia/Bicubic-Interpolation/blob/main/Assets/FSM%20Padding.jpg?raw=true)
 
 ## Testing
 
@@ -31,4 +38,4 @@ It took 2350 ps to upscale a 25x25 image into a 50x50
 ![alt text](https://github.com/Jordinia/Bicubic-Interpolation/blob/main/Assets/ScreenshotWave3.jpg?raw=true)
 ![alt text](https://github.com/Jordinia/Bicubic-Interpolation/blob/main/Assets/ScreenshotWave4.jpg?raw=true)
 
-Full result is here ![alt text](https://github.com/Jordinia/Bicubic-Interpolation/blob/main/Assets/UPSCALER.wlf)
+Full result is ![here](https://github.com/Jordinia/Bicubic-Interpolation/blob/main/Assets/UPSCALER.wlf)
