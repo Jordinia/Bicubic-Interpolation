@@ -22,7 +22,7 @@ We tested our design by using a testbench file that reads a predetermined BMP im
 ![alt text](https://github.com/Jordinia/Bicubic-Interpolation/blob/main/ScreenshotWave1.jpg?raw=true)
 ![alt text](https://github.com/Jordinia/Bicubic-Interpolation/blob/main/ScreenshotWave2.jpg?raw=true)
 
-2350 ps after 50x50
+it took 2350 ps to upscale a 25x25 image into a 50x50
 
 ![alt text](https://github.com/Jordinia/Bicubic-Interpolation/blob/main/ScreenshotWave3.jpg?raw=true)
 ![alt text](https://github.com/Jordinia/Bicubic-Interpolation/blob/main/ScreenshotWave4.jpg?raw=true)
