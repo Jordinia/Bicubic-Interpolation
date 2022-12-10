@@ -45,9 +45,13 @@ Full wave result is ![here](https://github.com/Jordinia/Bicubic-Interpolation/bl
 ### Upscaled Image
  
  - Failed Test 1, 22x22 into 44x44 cropped to 22x22
+
  ![alt text](https://raw.githubusercontent.com/Jordinia/Bicubic-Interpolation/main/Assets/test1.bmp)
+ 
  ![alt text](https://raw.githubusercontent.com/Jordinia/Bicubic-Interpolation/main/Assets/out1.bmp)
  
  - Test 2, 22x22 into 44x44 
- ![alt text](https://raw.githubusercontent.com/Jordinia/Bicubic-Interpolation/main/Assets/test2.bmp)
+ - 
+ ![alt text](https://raw.githubusercontent.com/Jordinia/Bicubic-Interpolation/main/Assets/test1.bmp)
+ 
  ![alt text](https://raw.githubusercontent.com/Jordinia/Bicubic-Interpolation/main/Assets/out2.bmp)
