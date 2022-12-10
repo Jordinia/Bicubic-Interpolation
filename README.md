@@ -8,8 +8,21 @@ Our project aims to recreate the functionality of the Hardware Accelerator Image
 
 ## How it works
 
+
+
 ## How to use
+
+
 
 ## Testing
 
+
+
 ## Result
+![alt text](https://github.com/Jordinia/Bicubic-Interpolation/blob/main/ScreenshotWave1.jpg?raw=true)
+![alt text](https://github.com/Jordinia/Bicubic-Interpolation/blob/main/ScreenshotWave2.jpg?raw=true)
+
+2350 ps after 25x25
+
+![alt text](https://github.com/Jordinia/Bicubic-Interpolation/blob/main/ScreenshotWave3.jpg?raw=true)
+![alt text](https://github.com/Jordinia/Bicubic-Interpolation/blob/main/ScreenshotWave4.jpg?raw=true)
