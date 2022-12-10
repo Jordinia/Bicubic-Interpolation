@@ -1,5 +1,5 @@
 --bicubic interpolation
---version: 11.41 10/12
+--version: 13.23 12/10
 library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
@@ -9,9 +9,9 @@ use IEEE.MATH_REAL.ALL;
 use IEEE.fixed_pkg.all;
 
 --uncomment code below if you run in Quartus prime lite/standard version.
--- library ieee_proposed;
--- use ieee_proposed.fixed_float_types.all;
--- use ieee_proposed.fixed_pkg.all;
+--library ieee_proposed;
+--use ieee_proposed.fixed_float_types.all;
+--use ieee_proposed.fixed_pkg.all;
 
 use work.package_imageArray.all;
 
@@ -22,7 +22,7 @@ entity interpolation is
         upscale_ratio   : natural := 2
     );
     port (
-        in_image    : in image_process(0 to x-1, 0 to y-1);
+        in_image    : in image_process(0 to x-1,0 to y-1);
         out_image   : out image_process(0 to x*upscale_ratio-1, 0 to y*upscale_ratio-1);
         clk, start  : in std_logic;
         doneUpscale : out std_logic
@@ -60,7 +60,7 @@ architecture rtl of interpolation is
         clk             : in std_logic;
         in_image        : in image_process(0 to x-1, 0 to y-1);
         image_padded    : out image_process(0 to x+3, 0 to y+3);
-        done_padding    : out std_logic;
+        done_padding    : inout std_logic;
         enable_padding  : in std_logic
         );
     end component;
@@ -68,7 +68,7 @@ architecture rtl of interpolation is
     type state_type is (IDLE,PAD_STATE, PROCESSING, DONE);
     signal state            : state_type;
     signal in_image_buff    : image_process(0 to x-1,0 to y-1);
-    signal in_image_padded  : image_process(0 to x+3, 0 to y+3);
+    signal image_padded  : image_process(0 to x+3, 0 to y+3);
     signal out_image_buff   : image_process(0 to x*upscale_ratio-1, 0 to y*upscale_ratio-1);
     signal height, weight   : natural;
     signal i, j, k, l, m    : natural := 0;
@@ -83,7 +83,7 @@ begin
     ) port map (
         clk => clk,
         in_image => in_image,
-        image_padded => in_image_padded,
+        image_padded => image_padded,
         done_padding => done_padding,
         enable_padding => enable_padding
 
@@ -100,30 +100,35 @@ begin
         variable neighbour_matrix       : image_process (0 to 3, 0 to 3) := (others => (others => (others => 0)));
         variable dot_product_buff       : rgb_array(0 to 3);
         variable result_neighbour       : rgb;
-        variable temp                   : rgb;
+        variable temp_red               : integer := 0;
+        variable temp_green             : integer := 0;
+        variable temp_blue              : integer := 0;
 		variable temp_sfixed_red        : sfixed(7 downto -7) := (others => '0');
 		variable temp_sfixed_green		: sfixed(7 downto -7) := (others => '0');
 		variable temp_sfixed_blue		: sfixed(7 downto -7) := (others => '0');
        
     begin 
-        if (start = '0') then
+        if start = '0' then
             state <= IDLE;
-            doneUpscale <= '0';
         elsif (rising_edge(clk)) then
             
             case state is
                 when IDLE => 
-                    doneUpscale <= '0';
-                    if (start = '1') then
+                    --done_padding <= '0';
+                    if start = '1' then
+                        enable_padding <= '1';
                         state <= PAD_STATE;
                     end if;
 
                 when PAD_STATE =>
-                    enable_padding <= '1';
-                    if done_padding <= '1' then
+                    if done_padding <= '0' then state <= PAD_STATE;
+                    elsif done_padding <= '1' then
                         enable_padding <= '0';
                         state <= PROCESSING;
                     end if;
+                        
+                    
+                    
 
                 when PROCESSING =>
                     for i in 0 to x*upscale_ratio-1 loop
@@ -150,7 +155,7 @@ begin
                         
                             for k in 0 to 3 loop
                                 for l in 0 to 3 loop
-                                    neighbour_matrix(k,l) := in_image_padded(integer(round(to_real(neig_x) - to_real(x_matrix(k)))), integer(round(to_real(neig_y) - to_real(y_matrix(l)))));
+                                    neighbour_matrix(k,l) := image_padded(integer(round(to_real(neig_x) - to_real(x_matrix(k)))), integer(round(to_real(neig_y) - to_real(y_matrix(l)))));
                                     --wait until (rising_edge(clk));
                                 end loop;
                                 --wait until (rising_edge(clk));
@@ -158,9 +163,9 @@ begin
                         
                             --dot product k_matrix_x and neighbour_matrix, result in dot_product_buff
                             for k in 0 to 3  loop
-                                temp.red    := 0;
-                                temp.green  := 0;
-                                temp.blue   := 0;
+                                temp_red    := 0;
+                                temp_green  := 0;
+                                temp_blue   := 0;
                                 for l in 0 to 3 loop
                                     for m in 0 to 3 loop
                                         temp_sfixed_red     := to_sfixed((neighbour_matrix(l,m).red), temp_sfixed_red);
@@ -168,38 +173,77 @@ begin
                                         temp_sfixed_blue    := to_sfixed((neighbour_matrix(l,m).blue), temp_sfixed_blue);
                                         
 
-                                        temp.red    := temp.red + integer((to_real(k_matrix_x(k))*to_real(temp_sfixed_red)));    
-                                        temp.green  := temp.green + integer((to_real(k_matrix_x(k))*to_real(temp_sfixed_green)));    
-                                        temp.blue   := temp.blue + integer((to_real(k_matrix_x(k))*to_real(temp_sfixed_blue)));    
-                                        --wait until (rising_edge(clk));   
+                                        temp_red    := temp_red + integer((to_real(k_matrix_x(k))*to_real(temp_sfixed_red)));    
+                                        temp_green  := temp_green + integer((to_real(k_matrix_x(k))*to_real(temp_sfixed_green)));    
+                                        temp_blue   := temp_blue + integer((to_real(k_matrix_x(k))*to_real(temp_sfixed_blue)));    
+
+                                        --wait until (rising_edge(clk));  
+                                        if temp_red > 2550 then
+                                            temp_red := 2550;
+                                        elsif temp_red < -2550 then
+                                            temp_red := -2550;
+                                        end if;
+    
+                                        if temp_green > 2550 then
+                                            temp_green := 2550;
+                                        elsif temp_green < -2550 then
+                                            temp_green := -2550;
+                                        end if;
+    
+                                        if temp_blue > 2550 then
+                                            temp_blue := 2550;
+                                        elsif temp_blue < -2550 then
+                                            temp_blue := -2550;
+                                        end if;
                                     end loop;
                                     --wait until (rising_edge(clk));
                                 end loop;
-                                dot_product_buff(k).red   := temp.red; 
-                                dot_product_buff(k).green := temp.green; 
-                                dot_product_buff(k).blue  := temp.blue; 
+                                dot_product_buff(k).red   := abs(temp_red/10); 
+                                dot_product_buff(k).green := abs(temp_green/10); 
+                                dot_product_buff(k).blue  := abs(temp_blue/10); 
                                 --wait until (rising_edge(clk));
                             end loop; 
                             
                             --dot product k_matrix_y and dot_product_buff, result in result_neighbour
                             for k in 0 to 3  loop
                                 for l in 0 to 1 loop
-                                    temp.red    := 0;
-                                    temp.green  := 0;
-                                    temp.blue   := 0;
+                                    temp_red    := 0;
+                                    temp_green  := 0;
+                                    temp_blue   := 0;
                                     for m in 0 to 3 loop
                                         temp_sfixed_red     := to_sfixed((dot_product_buff(m).red), temp_sfixed_red);
                                         temp_sfixed_green   := to_sfixed((dot_product_buff(m).green), temp_sfixed_green);
                                         temp_sfixed_blue    := to_sfixed((dot_product_buff(m).blue), temp_sfixed_blue);
                                             
-                                        temp.red    := temp.red + integer((to_real(k_matrix_y(k))*to_real(temp_sfixed_red)));    
-                                        temp.green  := temp.green + integer((to_real(k_matrix_y(k))*to_real(temp_sfixed_green)));    
-                                        temp.blue   := temp.blue + integer((to_real(k_matrix_y(k))*to_real(temp_sfixed_blue))); 
-                                        --wait until (rising_edge(clk));      
+                                        temp_red    := temp_red + abs(integer((to_real(k_matrix_y(k))*to_real(temp_sfixed_red))));    
+                                        temp_green  := temp_green + abs(integer((to_real(k_matrix_y(k))*to_real(temp_sfixed_green))));    
+                                        temp_blue   := temp_blue + abs(integer((to_real(k_matrix_y(k))*to_real(temp_sfixed_blue)))); 
+
+                                        temp_red := abs(temp_red); 
+                                        temp_green := abs(temp_green); 
+                                        temp_blue := abs(temp_blue); 
+                                        --wait until (rising_edge(clk));        
+                                        if temp_red > 2550 then
+                                            temp_red := 2550;
+                                        elsif temp_red < -2550 then
+                                            temp_red := -2550;
+                                        end if;
+    
+                                        if temp_green > 2550 then
+                                            temp_green := 2550;
+                                        elsif temp_green < -2550 then
+                                            temp_green := -2550;
+                                        end if;
+    
+                                        if temp_blue > 2550 then
+                                            temp_blue := 2550;
+                                        elsif temp_blue < -2550 then
+                                            temp_blue := -2550;
+                                        end if;
                                     end loop;
-                                result_neighbour.red   := temp.red; 
-                                result_neighbour.green := temp.green; 
-                                result_neighbour.blue  := temp.blue; 
+                                result_neighbour.red   := temp_red/10; 
+                                result_neighbour.green := temp_green/10; 
+                                result_neighbour.blue  := temp_blue/10; 
                                 --wait until (rising_edge(clk));
                                 end loop;
                                 --wait until (rising_edge(clk));
@@ -214,10 +258,8 @@ begin
                         --wait until (rising_edge(clk));
                     end loop;
                     state <= DONE;
-                    doneUpscale <= '1';
-
+                    doneUpscale <= '1';                           
                 when DONE =>
-                    
                     out_image <=  out_image_buff;
                     state <= IDLE;
             end case; 

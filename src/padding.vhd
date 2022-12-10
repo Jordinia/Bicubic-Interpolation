@@ -1,5 +1,5 @@
 --padding
---version: 11.41 10/12
+--version: 13.23 12/10
 library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
@@ -16,7 +16,7 @@ entity padding is
         clk            : in std_logic;
         in_image        : in image_process(0 to x-1, 0 to y-1);
         image_padded    : out image_process(0 to x+3, 0 to y+3);
-        done_padding    : out std_logic;
+        done_padding    : inout std_logic := '0';
         enable_padding  : in std_logic
     );
 end entity padding;
@@ -37,10 +37,11 @@ begin
             ready <= enable_padding;
             case state is
                 when IDLE =>
-                    done_padding <= '0';
+                done_padding <= '0';
                     if ready = '1' then
                         state <= ZEROS;
                         ready <= '0';
+                        
                     end if;    
                 when ZEROS =>
                     for i in 0 to x+3 loop
@@ -120,8 +121,9 @@ begin
                     end loop;
                     state <= DONE;
                     done_padding <= '1';
-                when DONE =>
                     image_padded <= image_padded_buff;
+                when DONE =>
+                    --done_padding <= '1';
                     state <= IDLE;
                 when others =>
                     state <= IDLE;
